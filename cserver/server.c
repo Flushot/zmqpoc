@@ -24,21 +24,28 @@ int main(int argc, char **argv) {
     sck = zmq_socket(ctx, ZMQ_PUB);
     assert(sck);
 
-    rc = zmq_bind(sck, "tcp://127.0.0.1:6667");
-    assert(rc != -1);
+    rc = zmq_bind(sck, "tcp://*:6667");
+    if (rc == -1) {
+        perror("zmq_bind()");
+        goto cleanup;
+    }
 
     srand(time(NULL));
     signal(SIGINT, handle_sigint);
 
     while (is_running) {
       randn = rand() * 2 ^ (8 * sizeof(randn));
-      sprintf(message, "%d %u", i % 30, randn);
+      sprintf(message, "%d %u", i++ % 30, randn);
       printf("%s\n", message);
 
-      zmq_send(sck, &message, strlen(message) + 1, 0);
-      ++i;
+      rc = zmq_send(sck, &message, strlen(message) + 1, 0);
+      if (rc == -1) {
+        perror("zmq_send()");
+        is_running = 0;
+      }
     }
 
+cleanup:
     printf("Cleaning up...\n");
     zmq_close(sck);
     zmq_ctx_destroy(ctx);
