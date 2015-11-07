@@ -24,7 +24,7 @@ if __name__ == '__main__':
     while True:
         message = sck.recv_string()
         i, num = message.split(' ', 1)
-        last.append(int(num[:-1]))  # remove null terminator
+        last.append(int(num))
         if len(last) == 10**4:
             average = reduce(lambda x, y: x + y, last, 0) / len(last)
             log.debug(average)

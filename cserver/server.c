@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
       randn = rand() * 2 ^ (8 * sizeof(randn));
       sprintf(message, "%d %u", i++ % 30, randn);
 
-      rc = zmq_send(sck, &message, strlen(message) + 1, 0);
+      rc = zmq_send(sck, &message, strlen(message), 0);
       if (rc == -1) {
         perror("zmq_send()");
         is_running = 0;
