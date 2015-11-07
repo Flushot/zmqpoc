@@ -18,12 +18,12 @@ int main(int argc, char **argv) {
     unsigned i, randn;
     char message[100];
     void *ctx, *sck;  /* zmq socket */
-	clock_t begin, end;  /* perf timing */
-	double elapsed;
-	int msg_ctr = 0;
+    clock_t begin, end;  /* perf timing */
+    double elapsed;
+    int msg_ctr = 0;
 
-	/* printf number formatting with commas */
-	setlocale(LC_NUMERIC, "");
+    /* printf number formatting with commas */
+    setlocale(LC_NUMERIC, "");
 
     ctx = zmq_ctx_new();
     assert(ctx);
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
     signal(SIGINT, die_signal_handler);
     signal(SIGTERM, die_signal_handler);
 
-	begin = clock();
+    begin = clock();
     while (is_running) {
       randn = rand() * 2 ^ (8 * sizeof(randn));
       sprintf(message, "%d %u", i++ % 30, randn);
@@ -52,15 +52,15 @@ int main(int argc, char **argv) {
         is_running = 0;
       }
 
-	  ++msg_ctr;
+      ++msg_ctr;
 
-	  end = clock();
-	  elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
-	  if (elapsed >= 1.0) {
-		printf("Published: %'d messages/sec\n", msg_ctr);
-		msg_ctr = 0;
-		begin = clock();
-	  }
+      end = clock();
+      elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
+      if (elapsed >= 1.0) {
+        printf("Published: %'d messages/sec\n", msg_ctr);
+        msg_ctr = 0;
+        begin = clock();
+      }
     }
 
 cleanup:
