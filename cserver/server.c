@@ -14,6 +14,7 @@ static void die_signal_handler(int signum) {
 }
 
 int main(int argc, char **argv) {
+    int message_length;
     unsigned i, randn, msg_ctr;
     char message[100];
     void *ctx, *sck;  /* zmq socket */
@@ -40,9 +41,13 @@ int main(int argc, char **argv) {
 
     for (i = 0, msg_ctr = 0, begin = clock(); is_running; ++i, ++msg_ctr) {
       randn = rand() * 2 ^ (8 * sizeof(randn));
-      snprintf(message, sizeof(message), "%d %u", i % 30, randn);
+      message_length = snprintf(message, sizeof(message), "%d %u", i % 30, randn);
+      if (message_length == -1) {
+        perror("snprintf()");
+        break;
+      }
 
-      if (zmq_send(sck, &message, strlen(message), 0) == -1) {
+      if (zmq_send(sck, &message, message_length, 0) == -1) {
         perror("zmq_send()");
         break;
       }
