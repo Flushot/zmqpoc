@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-import zmq
-import random
 import logging
+import random
+
+import zmq
 
 log = logging.getLogger(__name__)
 

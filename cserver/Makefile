@@ -5,7 +5,7 @@ CFLAGS = -I/opt/local/include -L/opt/local/lib -DDEBUG
 all: server
 
 server: server.c
-	$(CC) $(CFLAGS) server.c -lzmq -o server
+	$(CC) $(CFLAGS) server.c -lzmq -lmsgpack -o server
 
 run_valgrind: server
 	valgrind --tool=memcheck --leak-check=full --suppressions=vg.supp ./server
